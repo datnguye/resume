@@ -1,0 +1,15 @@
+<section class="resume-section bg-[var(--card)] p-6 rounded-lg shadow-sm">
+    <h2 class="text-xl font-bold mb-4 border-b pb-2 border-[var(--primary)]">Awards</h2>
+    
+    {% if section.extra.awards %}
+        {% for award in section.extra.awards %}
+        <div {% if not loop.last %}class="mb-3"{% endif %}>
+            <h3 class="font-semibold text-sm">{{ award.emoji | default(value="") }} {{ award.title }}</h3>
+            <p class="text-xs text-[var(--primary)]">{{ award.organization }} - {{ award.year }}</p>
+            {% if award.description %}
+            <p class="text-sm opacity-80 mt-1">{{ award.description }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% endif %}
+</section>

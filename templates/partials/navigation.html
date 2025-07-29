@@ -1,0 +1,14 @@
+<!-- Navigation -->
+<nav class="flex justify-between items-center mb-6">
+    <div class="flex gap-3">
+        <a href="/" class="px-4 py-2 rounded-full {% if current_path == '/' or not current_path %}bg-[var(--primary)] text-white{% else %}bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white{% endif %} text-sm font-semibold transition-all">Resume</a>
+        <a href="/blog" class="px-4 py-2 rounded-full {% if current_path == '/blog' %}bg-[var(--primary)] text-white{% else %}bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white{% endif %} text-sm font-semibold transition-all">Blog</a>
+    </div>
+    
+    <!-- Display page title on blog posts -->
+    {% if page and page.title and '/blog/' in current_path %}
+    <div class="text-sm text-[var(--text)] font-bold max-w-md text-left truncate">
+        <span class="hidden md:inline">{{ page.title }}</span>
+    </div>
+    {% endif %}
+</nav>

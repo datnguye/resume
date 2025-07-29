@@ -1,0 +1,18 @@
+<section class="resume-section bg-[var(--card)] p-6 rounded-lg shadow-sm">
+    <h2 class="text-xl font-bold mb-4 border-b pb-2 border-[var(--primary)]">References</h2>
+    
+    {% if section.extra.references %}
+        {% for ref in section.extra.references %}
+        <div {% if not loop.last %}class="mb-4"{% endif %}>
+            <h3 class="font-semibold text-sm">{{ ref.emoji }} {{ ref.name }}</h3>
+            <p class="text-xs text-[var(--primary)]">{{ ref.title }}</p>
+            {% if ref.email %}
+            <p class="text-xs opacity-80">📧 Email: {{ ref.email }}</p>
+            {% endif %}
+            {% if ref.description %}
+            <p class="text-sm opacity-80 mt-1">{{ ref.description }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% endif %}
+</section>

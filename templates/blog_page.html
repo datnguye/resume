@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }} - {{ config.title }}</title>
+    <meta name="description" content="{{ page.description | default(value=page.summary) | default(value='') }}">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/css/style.css" as="style">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/article.css">
+    
+    <!-- Only load syntax highlighting if needed -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9818368894527523"
+         crossorigin="anonymous"></script>
+</head>
+<body class="bg-[var(--background)] text-[var(--text)] transition-colors duration-300 font-sans">
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+        <div class="absolute top-20 left-10 w-40 h-40 rounded-full bg-[var(--primary)] opacity-10 floating"></div>
+        <div class="absolute bottom-10 right-20 w-60 h-60 rounded-full bg-[var(--secondary)] opacity-10 floating" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/3 right-1/4 w-32 h-32 rounded-full bg-[var(--primary)] opacity-10 floating" style="animation-delay: 4s;"></div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- Header with navigation -->
+        <header class="mb-12">
+            {% set current_path = page.path %}
+            {% include "partials/navigation.html" %}
+        </header>
+
+        <!-- Article -->
+        <article class="bg-[var(--card)] rounded-lg shadow-lg p-8 md:p-12">
+            <!-- Article Header -->
+            <header class="mb-8 pb-8 border-b border-[var(--text)] border-opacity-10">
+                <h1 class="text-3xl md:text-4xl font-bold mb-4">{{ page.title }}</h1>
+                
+                <!-- Meta Information -->
+                <div class="article-meta">
+                    {% if page.date %}
+                    <time datetime="{{ page.date | date(format='%Y-%m-%d') }}">
+                        <i class="fas fa-calendar" aria-hidden="true"></i>
+                        {{ page.date | date(format="%B %d, %Y") }}
+                    </time>
+                    {% endif %}
+                    
+                    {% if page.extra.author %}
+                    <span>
+                        <i class="fas fa-user" aria-hidden="true"></i>
+                        {{ page.extra.author }}
+                    </span>
+                    {% endif %}
+                    
+                    {% if page.extra.read_time %}
+                    <span>
+                        <i class="fas fa-clock" aria-hidden="true"></i>
+                        {{ page.extra.read_time }}
+                    </span>
+                    {% endif %}
+                </div>
+
+                <!-- Tags -->
+                {% if page.extra.tags %}
+                <div class="article-tags">
+                    {% for tag in page.extra.tags %}
+                    <span>#{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </header>
+
+            <!-- Table of Contents -->
+            {% if page.extra.toc and page.toc %}
+            <nav class="toc-nav">
+                <h2 class="cursor-pointer" onclick="toggleTOC()">
+                    <i class="fas fa-list"></i>
+                    Table of Contents
+                    <i id="toc-toggle-icon" class="fas fa-chevron-down ml-auto text-sm transition-transform duration-200"></i>
+                </h2>
+                <ul id="toc-content" class="space-y-2 max-h-96 overflow-y-auto">
+                    {% for h1 in page.toc %}
+                    <li>
+                        <a href="#{{ h1.id }}" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            {{ h1.title }}
+                        </a>
+                        {% if h1.children %}
+                        <ul class="ml-4 mt-2 space-y-1">
+                            {% for h2 in h1.children %}
+                            <li>
+                                <a href="#{{ h2.id }}" class="text-sm opacity-70 hover:opacity-100 hover:text-[var(--primary)] transition-all">
+                                    {{ h2.title }}
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+            <script>
+                function toggleTOC() {
+                    const content = document.getElementById('toc-content');
+                    const icon = document.getElementById('toc-toggle-icon');
+                    
+                    if (content.style.display === 'none') {
+                        content.style.display = 'block';
+                        icon.classList.remove('rotate-180');
+                    } else {
+                        content.style.display = 'none';
+                        icon.classList.add('rotate-180');
+                    }
+                }
+                
+                // Optional: Start with TOC expanded
+                // document.addEventListener('DOMContentLoaded', () => toggleTOC());
+            </script>
+            {% endif %}
+
+            <!-- Content with In-Article Ads -->
+            <div class="article-content" id="article-content">
+                {{ page.content | safe }}
+            </div>
+
+
+            <!-- Article Footer -->
+            <footer class="mt-12 pt-8 border-t border-[var(--text)] border-opacity-10">
+                <div class="flex flex-wrap justify-between items-center gap-4">
+                    <!-- Share buttons -->
+                    <div class="share-buttons">
+                        <span class="text-sm opacity-70">Share:</span>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ config.base_url }}{{ page.path }}" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           aria-label="Share on Facebook">
+                            <i class="fab fa-facebook" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?text={{ page.title | urlencode }}&url={{ config.base_url }}{{ page.path }}" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           aria-label="Share on Twitter">
+                            <i class="fab fa-twitter" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ config.base_url }}{{ page.path }}" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           aria-label="Share on LinkedIn">
+                            <i class="fab fa-linkedin" aria-hidden="true"></i>
+                        </a>
+                    </div>
+
+                    <!-- Back to blog -->
+                    <a href="/blog" class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-2">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Blog
+                    </a>
+                </div>
+            </footer>
+        </article>
+
+        <!-- Navigation between posts -->
+        <nav class="article-nav">
+            {% if page.earlier %}
+            <a href="{{ page.earlier.permalink }}">
+                <i class="fas fa-chevron-left"></i>
+                <span class="hidden sm:inline">{{ page.earlier.title | truncate(length=30) }}</span>
+                <span class="sm:hidden">Previous</span>
+            </a>
+            {% else %}
+            <div></div>
+            {% endif %}
+
+            {% if page.later %}
+            <a href="{{ page.later.permalink }}">
+                <span class="hidden sm:inline">{{ page.later.title | truncate(length=30) }}</span>
+                <span class="sm:hidden">Next</span>
+                <i class="fas fa-chevron-right"></i>
+            </a>
+            {% else %}
+            <div></div>
+            {% endif %}
+        </nav>
+
+        {% include "partials/footer.html" %}
+    </div>
+
+    <script src="/js/script.js"></script>
+    
+    <!-- Article Ads Script -->
+    {% if page.extra.show_ads is not defined or page.extra.show_ads %}
+    <script src="/js/article-ads.js"></script>
+    {% endif %}
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
+</body>
+</html>

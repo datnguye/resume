@@ -1,0 +1,29 @@
+<section class="resume-section bg-[var(--card)] p-6 rounded-lg shadow-sm">
+    <h2 class="text-xl font-bold mb-4 border-b pb-2 border-[var(--primary)]">Certifications</h2>
+    
+    {% if section.extra.certifications %}
+        {% for cert in section.extra.certifications %}
+        <div class="mb-3">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h3 class="font-semibold text-sm">
+                        <a href="{{ cert.url }}" class="hover:text-[var(--primary)] transition-colors inline-flex items-center gap-1">
+                            {% if cert.icon %}
+                            <img src="{{ cert.icon }}" alt="{{ cert.title }}" class="w-4 h-4 inline-block rounded">
+                            {% elif cert.emoji %}
+                            {{ cert.emoji }}
+                            {% endif %}
+                            {{ cert.title }}
+                        </a>
+                    </h3>
+                    <p class="text-xs text-[var(--primary)]">{{ cert.organization }}</p>
+                    {% if cert.description %}
+                    <p class="text-sm opacity-80 mt-1">{{ cert.description }}</p>
+                    {% endif %}
+                </div>
+                <span class="text-xs bg-[var(--primary)] text-white px-2 py-1 rounded">{{ cert.year }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+</section>

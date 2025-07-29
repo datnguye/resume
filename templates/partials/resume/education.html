@@ -1,0 +1,21 @@
+<section class="resume-section bg-[var(--card)] p-6 rounded-lg shadow-sm">
+    <h2 class="text-xl font-bold mb-4 border-b pb-2 border-[var(--primary)]">Education</h2>
+    
+    {% if section.extra.education %}
+        {% for edu in section.extra.education %}
+        <div {% if not loop.last %}class="mb-4"{% endif %}>
+            <div class="flex justify-between items-start">
+                <h3 class="font-semibold">{{ edu.degree }}</h3>
+                <span class="text-xs bg-[var(--primary)] text-white px-2 py-1 rounded">{{ edu.year }}</span>
+            </div>
+            <p class="text-sm text-[var(--primary)] mb-2">{{ edu.school }}</p>
+            {% if edu.gpa %}
+            <p class="text-sm">GPA: {{ edu.gpa }}</p>
+            {% endif %}
+            {% if edu.description %}
+            <p class="text-sm opacity-80 mt-1">{{ edu.description }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% endif %}
+</section>

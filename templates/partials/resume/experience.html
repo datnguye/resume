@@ -1,0 +1,70 @@
+<section class="resume-section bg-[var(--card)] p-6 rounded-lg shadow-sm">
+    <h2 class="text-xl font-bold mb-4 border-b pb-2 border-[var(--primary)]">Work Experience</h2>
+    
+    <div id="experienceContent">
+        <!-- Recent positions (always visible) -->
+        {% if section.extra.experience %}
+            {% for exp in section.extra.experience %}
+            <div class="mb-6">
+                <div class="flex justify-between items-start mb-1">
+                    <div class="flex items-center gap-2">
+                        {% if exp.current %}
+                        <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">Current</span>
+                        {% endif %}
+                        <h3 class="font-semibold">{{ exp.title }}</h3>
+                    </div>
+                    <span class="text-xs bg-[var(--primary)] text-white px-2 py-1 rounded">{{ exp.period }}</span>
+                </div>
+                <p class="text-sm text-[var(--primary)] mb-2">{{ exp.company }}</p>
+                {% if exp.responsibilities %}
+                <ul class="list-disc list-inside text-sm space-y-1 pl-2">
+                    {% for resp in exp.responsibilities %}
+                    <li>
+                        {% if exp.links %}
+                            {% set resp_with_links = resp %}
+                            {% for link in exp.links %}
+                                {% set resp_with_links = resp_with_links | replace(from=link.text, to='<a href="' ~ link.url ~ '" class="text-[var(--primary)] underline">' ~ link.text ~ '</a>') %}
+                            {% endfor %}
+                            {{ resp_with_links | safe }}
+                        {% else %}
+                            {{ resp }}
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% endif %}
+        
+        <!-- Older Positions (collapsible) -->
+        {% if section.extra.experience_older %}
+        <div id="olderExperience" class="overflow-hidden transition-all duration-500 ease-in-out max-h-0">
+            {% for exp in section.extra.experience_older %}
+            <div class="mb-6">
+                <div class="flex justify-between items-start">
+                    <h3 class="font-semibold">{{ exp.title }}</h3>
+                    <span class="text-xs bg-[var(--primary)] text-white px-2 py-1 rounded">{{ exp.period }}</span>
+                </div>
+                <p class="text-sm text-[var(--primary)] mb-2">{{ exp.company }}</p>
+                {% if exp.responsibilities %}
+                <ul class="list-disc list-inside text-sm space-y-1 pl-2">
+                    {% for resp in exp.responsibilities %}
+                    <li>{{ resp }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Toggle button at the bottom -->
+        <div class="text-center mt-4">
+            <button id="toggleExperience" class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-2">
+                <span>Show More</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+        {% endif %}
+    </div>
+</section>

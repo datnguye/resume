@@ -1,0 +1,20 @@
+<section class="resume-section bg-[var(--card)] p-6 rounded-lg shadow-sm">
+    <h2 class="text-xl font-bold mb-4 border-b pb-2 border-[var(--primary)]">Languages</h2>
+    
+    {% if section.extra.languages %}
+        {% for lang in section.extra.languages %}
+        <div class="mb-3">
+            <div class="flex justify-between text-sm mb-1">
+                <span>{{ lang.emoji }} {{ lang.name }}</span>
+                <span>{{ lang.level }}</span>
+            </div>
+            <div class="skill-bar bg-gray-200">
+                <div class="progress bg-[var(--primary)]" style="width: {{ lang.percentage }}%"></div>
+            </div>
+            {% if lang.description %}
+            <p class="text-xs opacity-80 mt-1">{{ lang.description }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% endif %}
+</section>
