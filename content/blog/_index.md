@@ -1,9 +1,6 @@
 +++
 title = "Blog Posts & Articles"
 template = "blog.html"
-sort_by = "date"
-paginate_by = 6
-paginate_path = "page"
 
 [extra]
 # [[extra.blog_posts]]

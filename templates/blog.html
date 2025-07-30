@@ -67,7 +67,7 @@
                     
                     <!-- Footer with read time and link -->
                     <div class="px-6 py-4 bg-[var(--background)] bg-opacity-50 flex justify-between items-center">
-                        <span class="text-xs opacity-60">{{ post.reading_time }} min read</span>
+                        <span class="text-xs opacity-60">🕥 {{ post.reading_time }} min read</span>
                         <a href="{{ post.permalink }}" rel="noopener noreferrer" 
                            class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-1">
                             Read Article
@@ -108,7 +108,7 @@
                     
                     <!-- Footer with read time and link -->
                     <div class="px-6 py-4 bg-[var(--background)] bg-opacity-50 flex justify-between items-center">
-                        <span class="text-xs opacity-60">{{ post.read_time }}</span>
+                        <span class="text-xs opacity-60">🕥 {{ post.read_time }}</span>
                         <a href="{{ post.url }}{% if '?' in post.url %}&{% else %}?{% endif %}utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio" target="_blank" rel="noopener noreferrer" 
                            class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-1">
                             Read Article
@@ -120,53 +120,13 @@
             {% endif %}
         </div>
 
-        <!-- Pagination Controls -->
-        {% if paginator %}
-        <nav class="mt-12 flex justify-center items-center space-x-4">
-            <!-- Previous Page -->
-            {% if paginator.previous %}
-            <a href="{{ paginator.previous }}" class="px-4 py-2 bg-[var(--card)] rounded-lg hover:bg-[var(--primary)] hover:text-white transition-colors">
-                <i class="fas fa-chevron-left mr-2"></i>Previous
-            </a>
-            {% else %}
-            <span class="px-4 py-2 bg-[var(--card)] rounded-lg opacity-50 cursor-not-allowed">
-                <i class="fas fa-chevron-left mr-2"></i>Previous
-            </span>
-            {% endif %}
-
-            <!-- Page Numbers -->
-            <div class="flex items-center space-x-2">
-                {% for page in range(start=1, end=paginator.number_pagers + 1) %}
-                    {% if page == paginator.current_index %}
-                    <span class="w-10 h-10 flex items-center justify-center bg-[var(--primary)] text-white rounded-lg font-semibold">
-                        {{ page }}
-                    </span>
-                    {% else %}
-                    <a href="{{ paginator.base_url }}{% if page > 1 %}page/{{ page }}/{% endif %}" 
-                       class="w-10 h-10 flex items-center justify-center bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white rounded-lg transition-colors">
-                        {{ page }}
-                    </a>
-                    {% endif %}
-                {% endfor %}
-            </div>
-
-            <!-- Next Page -->
-            {% if paginator.next %}
-            <a href="{{ paginator.next }}" class="px-4 py-2 bg-[var(--card)] rounded-lg hover:bg-[var(--primary)] hover:text-white transition-colors">
-                Next<i class="fas fa-chevron-right ml-2"></i>
-            </a>
-            {% else %}
-            <span class="px-4 py-2 bg-[var(--card)] rounded-lg opacity-50 cursor-not-allowed">
-                Next<i class="fas fa-chevron-right ml-2"></i>
-            </span>
-            {% endif %}
-        </nav>
-        {% endif %}
+        <!-- Pagination will be inserted here by JavaScript -->
 
         {% include "partials/footer.html" %}
     </div>
 
     <script src="/js/search.js"></script>
+    <script src="/js/blog-pagination.js"></script>
     <script src="/js/script.js"></script>
     
     <!-- Cookie Consent -->
