@@ -5,5 +5,11 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
+  // Initialize with consent mode
+  gtag('consent', 'default', {
+    'analytics_storage': 'denied',
+    'wait_for_update': 500
+  });
+
   gtag('config', 'G-B8KKFMX51L');
 </script>
