@@ -1,3 +1,3 @@
-# Resume - Dat Nguyen
+# About - Dat Nguyen
 
-A personal resume website built with [Zola](https://www.getzola.org/) static site generator.
+A personal website built with [Zola](https://www.getzola.org/) static site generator.
