@@ -196,7 +196,7 @@
 
 .article-tags span {
   font-size: 0.75rem;
-  background: rgba(153, 27, 27, 0.1); /* var(--primary) with opacity */
+  background: var(--primary);
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
 }
