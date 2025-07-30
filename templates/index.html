@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF and html2canvas for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="bg-[var(--background)] text-[var(--text)] transition-colors duration-300 font-sans">
@@ -29,7 +32,7 @@
         <!-- Header -->
         {% include "partials/resume/header.html" %}
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="resume-container grid grid-cols-1 lg:grid-cols-3 gap-8" id="pdf-content">
 
             <!-- Left Column -->
             <div class="lg:col-span-2 space-y-8">
@@ -71,6 +74,7 @@
     <script src="js/programming-chart.js"></script>
     <script src="js/database-chart.js"></script>
     <script src="js/experience-toggle.js"></script>
+    <script src="js/pdf-download.js"></script>
     
     <!-- Cookie Consent -->
     {% include "partials/cookie_consent.html" %}
