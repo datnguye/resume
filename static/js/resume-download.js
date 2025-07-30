@@ -51,6 +51,104 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Download Resume as PDF with styling preserved
     async function downloadResumePDF() {
+        // Show BuyMeACoffee popup
+        showBuyMeACoffeePopup();
+    }
+    
+    // Show popup with BuyMeACoffee link
+    function showBuyMeACoffeePopup() {
+        const button = document.querySelector('.pdf-download-btn');
+        const buttonRect = button.getBoundingClientRect();
+        
+        // Create overlay (lighter, just to capture clicks)
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            z-index: 9998;
+        `;
+        
+        // Create popup positioned near the button
+        const popup = document.createElement('div');
+        popup.style.cssText = `
+            position: fixed;
+            bottom: ${window.innerHeight - buttonRect.top + 10}px;
+            right: 20px;
+            background-color: var(--card);
+            color: var(--text);
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            border: 1px solid var(--border);
+        `;
+        
+        popup.innerHTML = `
+            <h4 style="margin-bottom: 10px; color: var(--primary); font-size: 16px;">☕ Support My Work</h4>
+            <p style="margin-bottom: 15px; font-size: 14px;">Found your next hire 🎯 OR resume template 📋? Either way, coffee ☕ keeps me updating it! 🚀✨</p>
+            <a href="https://buymeacoffee.com/datnguye" target="_blank" style="
+                display: inline-block;
+                background-color: #FFDD00;
+                color: #000;
+                padding: 8px 16px;
+                border-radius: 5px;
+                text-decoration: none;
+                font-weight: bold;
+                margin-bottom: 15px;
+                font-size: 14px;
+            ">☕ Buy Me a Coffee</a>
+            <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
+                <button id="downloadNow" style="
+                    background-color: var(--primary);
+                    color: white;
+                    border: none;
+                    padding: 8px 16px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-size: 13px;
+                    flex: 1;
+                ">Download Resume</button>
+                <button id="cancelDownload" style="
+                    background-color: transparent;
+                    color: var(--text);
+                    border: 1px solid var(--border);
+                    padding: 8px 16px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-size: 13px;
+                    flex: 1;
+                ">Cancel</button>
+            </div>
+        `;
+        
+        overlay.appendChild(popup);
+        document.body.appendChild(overlay);
+        
+        // Event handlers
+        document.getElementById('downloadNow').addEventListener('click', () => {
+            document.body.removeChild(overlay);
+            proceedWithDownload();
+        });
+        
+        document.getElementById('cancelDownload').addEventListener('click', () => {
+            document.body.removeChild(overlay);
+        });
+        
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                document.body.removeChild(overlay);
+            }
+        });
+    }
+    
+    // Actual download function
+    async function proceedWithDownload() {
         const button = document.querySelector('.pdf-download-btn');
         const originalText = button.innerHTML;
         button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
@@ -157,6 +255,24 @@ document.addEventListener('DOMContentLoaded', function() {
             pdfContainer.className = document.body.className + ' pdf-export-container';
             
             pdfContainer.appendChild(resumeClone);
+            
+            // Add footer with website URL
+            const footer = document.createElement('div');
+            footer.style.cssText = `
+                margin-top: 60px;
+                padding-top: 20px;
+                border-top: 1px solid ${getComputedStyle(document.documentElement).getPropertyValue('--border').trim()};
+                text-align: center;
+                font-size: 12px;
+                color: ${textColor};
+                opacity: 0.7;
+            `;
+            footer.innerHTML = `
+                <p>View online at: <a href="${window.location.origin}" style="color: var(--primary); text-decoration: none;">${window.location.hostname}</a></p>
+                <p style="margin-top: 5px;">Generated on ${new Date().toLocaleDateString()}</p>
+            `;
+            pdfContainer.appendChild(footer);
+            
             document.body.appendChild(pdfContainer);
             
             // Wait a moment for DOM to update
