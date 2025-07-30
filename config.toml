@@ -1,6 +1,6 @@
 # The URL the site will be built for
 title = "About | Dat Nguyen"
-description = "Dat Nguyen | Data & AI Consultant"
+description = "Data & AI Consultant | Turning Coffee ☕ into Code 💻 and Chaos into Charts 📈"
 base_url = "https://about.datnguyen.de"
 
 # Whether to automatically compile all Sass files in the sass directory
