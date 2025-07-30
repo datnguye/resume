@@ -87,7 +87,7 @@
                         
                         <!-- Title -->
                         <h2 class="text-xl font-bold mb-3 hover:text-[var(--primary)] transition-colors">
-                            <a href="{{ post.url }}" target="_blank" rel="noopener noreferrer">
+                            <a href="{{ post.url }}{% if '?' in post.url %}&{% else %}?{% endif %}utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio" target="_blank" rel="noopener noreferrer">
                                 {{ post.title }}
                             </a>
                         </h2>
@@ -108,7 +108,7 @@
                     <!-- Footer with read time and link -->
                     <div class="px-6 py-4 bg-[var(--background)] bg-opacity-50 flex justify-between items-center">
                         <span class="text-xs opacity-60">{{ post.read_time }}</span>
-                        <a href="{{ post.url }}" target="_blank" rel="noopener noreferrer" 
+                        <a href="{{ post.url }}{% if '?' in post.url %}&{% else %}?{% endif %}utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio" target="_blank" rel="noopener noreferrer" 
                            class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-1">
                             Read Article
                             <i class="fas fa-external-link-alt text-xs"></i>
