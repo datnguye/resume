@@ -41,6 +41,11 @@
   background: linear-gradient(90deg, var(--secondary) 0%, var(--primary) 100%);
 }
 
+/* Hide phone number on resume page */
+.phone-hidden {
+  display: none !important;
+}
+
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {

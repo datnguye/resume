@@ -256,6 +256,13 @@ document.addEventListener('DOMContentLoaded', function() {
             
             pdfContainer.appendChild(resumeClone);
             
+            // Show all hidden phone numbers in the PDF container
+            const allPhoneElements = pdfContainer.querySelectorAll('.phone-hidden');
+            allPhoneElements.forEach(el => {
+                el.classList.remove('phone-hidden');
+                el.style.display = 'flex'; // Ensure it's visible
+            });
+            
             // Add footer with website URL
             const footer = document.createElement('div');
             footer.style.cssText = `
