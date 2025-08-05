@@ -22,13 +22,14 @@ Context Engineering is how we solve these problems. It's the art of orchestratin
 
 The graph below illustrates the essential components and the relationships between them:
 
-- [1] User Intent & Prompting 🟡
-- [2] Agents & Reasoning 🔴
-- [3] RAG 🔵
-- [4] Action Tools 🔴
-- [5] Memory Systems 🟣
+- [[1](#1-user-intent-prompting-the-starting-point-yellow-circle)] User Intent & Prompting 🟡
+- [[2](#2-agents-reasoning-the-decision-makers-red-circle)] Agents & Reasoning 🔴
+- [[3](#3-rag-the-knowledge-base-blue-circle)] RAG 🔵
+- [[4](#4-action-tools-getting-things-done-red-circle)] Action Tools 🔴
+- [[5](#5-memory-systems-short-term-vs-long-term-purple-circle)] Memory Systems 🟣
 
 <link rel="stylesheet" href="/blog/context-engineering-modern-llm-ecosystem/diagram.css">
+<link rel="stylesheet" href="/blog/context-engineering-modern-llm-ecosystem/stacked-bar-chart.css">
 <div id="context-engineering-diagram" style="width: 100%; height: 700px; margin: 40px 0;" role="img" aria-label="Interactive diagram showing the relationships between Context Engineering components: User Intent & Prompting, Agents & Reasoning, RAG, Action Tools, and Memory Systems">
   <noscript>
     <p><strong>Diagram Description:</strong> This interactive diagram illustrates how Context Engineering components work together. At the center is the Context node, which connects to five key components: (1) User Intent & Prompting provides the initial query, (2) Agents & Reasoning orchestrates the decision-making process, (3) RAG retrieves relevant knowledge from your data, (4) Action Tools enable external interactions, and (5) Memory Systems maintain conversation state and user preferences. All components feed back into the central Context, creating a feedback loop that enriches the LLM's understanding.</p>
@@ -38,23 +39,26 @@ The graph below illustrates the essential components and the relationships betwe
 <script src="https://unpkg.com/neovis.js@2.1.0/dist/neovis.min.js"></script>
 <script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
 <script src="/blog/context-engineering-modern-llm-ecosystem/diagram.js"></script>
+<script src="/blog/context-engineering-modern-llm-ecosystem/stacked-bar-chart.js"></script>
 
 ## Breaking down the Context Engineering Stack
 
 When we zoom into the **Context** node type, we see that it’s essentially the **Prompt**.
 A prompt is typically structured as follows, whether we observe it directly or build it programmatically:
 
-```code
-[System Message 🟡]
-+ [Context 💚]
-+ [Intent 🟡]
-```
+
+<div id="basic-prompt-chart" data-stacked-chart='{"items": [
+  {"label": "System Message", "emoji": "🟡", "color": "#3d3319", "textColor": "#fbbf24"},
+  {"label": "Context", "emoji": "💚", "color": "#1a3a2e", "textColor": "#34d399"},
+  {"label": "Intent", "emoji": "🟡", "color": "#3d3319", "textColor": "#fbbf24"}
+]}' data-chart-options='{"height": 300, "captionText": "Basic Prompt Structure"}'></div>
+
 
 In a fresh inference, let's suppose a user asks, _"Show me the top 5 products by revenue last quarter."_
 
 * **System Message** 🟡 → sets the overall behavior or rules.
     > "You are a data analytics assistant. Always provide SQL queries and clear explanations."
-* **Intent** 🟡 → captures the user’s goal or request, this is actually the User Question in the natural language, possibly plus some [Prompt Engineering](https://www.promptingguide.ai/) stuff.
+* **Intent** 🟡 → captures the user's goal or request, this is actually the User Question in the natural language, possibly plus some [Prompt Engineering](https://www.promptingguide.ai/) stuff.
     > "Retrieve top 5 products by revenue for the last quarter."
 * **Context** 💚 → the dynamic part, enriched through augmentation and/or reasoning.
     > (assuming empty at the first place)
@@ -63,14 +67,14 @@ Unlike the static [System Message] and [Intent], the [Context] is designed to ev
 
 Behind the scenes, the full prompt often looks more detailed:
 
-```code
-[System Message 🟡]
-+ [Tool Feedback 🔴 → 💚]
-+ [RAG Retrieved Context 🔵 → 💚]
-+ [User Artifacts 🔴 → 💚]
-+ [Chat History 🟣 → 💚]
-+ [Intent 🟡]
-```
+<div id="context-engineered-chart" data-stacked-chart='{"items": [
+  {"label": "System Message", "emoji": "🟡", "color": "#3d3319", "textColor": "#fbbf24"},
+  {"label": "Tool Feedback", "emoji": "🔴 → 💚", "color": "#1a3a2e", "textColor": "#34d399"},
+  {"label": "RAG Retrieved Context", "emoji": "🔵 → 💚", "color": "#1a3a2e", "textColor": "#34d399"},
+  {"label": "User Artifacts", "emoji": "🔴 → 💚", "color": "#1a3a2e", "textColor": "#34d399"},
+  {"label": "Chat History", "emoji": "🟣 → 💚", "color": "#1a3a2e", "textColor": "#34d399"},
+  {"label": "Intent", "emoji": "🟡", "color": "#3d3319", "textColor": "#fbbf24"}
+]}' data-chart-options='{"height": 360, "captionText": "The arrows (→ 💚) indicate components that dynamically enrich the Context"}'></div>
 
 All of the elements above are orchestrated and delivered through the core discipline of Context Engineering introduced earlier.
 
@@ -89,7 +93,7 @@ response = llm.generate("What's our Q4 revenue?")
 # Context-engineered approach
 class ContextualPrompt:
     def __init__(self, intent, user_info):
-        self.intent = user_input
+        self.intent = intent
         self.user_info = user_info
 
     def enhance(self):
@@ -314,7 +318,7 @@ await fs_mcp.connect()
 result = await fs_mcp.use_filesystem("analyze project structure")
 ```
 
-MCP transforms your LLM from a text generator into an orchestration engine that can interact with your entire data stack.
+What's happening here? The `FileSystemMCP` class demonstrates how MCP transforms your LLM from a text generator into an orchestration engine. This is just one example — MCP can connect to databases, APIs, cloud services, and more. Your LLM becomes an intelligent orchestrator that can interact with your entire tech stack.
 
 **Popular MCP servers and tools (ecosystem status August 2025):**
 - [MCP Protocol](https://www.anthropic.com/news/model-context-protocol) — Universal standard by Anthropic, OpenAI joined steering committee

@@ -459,7 +459,6 @@ function initDiagram() {
         `;
 
         const legend = [
-            { color: '#312b2bff', label: 'Person' },
             { color: '#F59E0B', label: 'Data' },
             { color: '#10B981', label: 'CONTEXT' },
             { color: '#1d27efcf', label: 'Augmentation' },
