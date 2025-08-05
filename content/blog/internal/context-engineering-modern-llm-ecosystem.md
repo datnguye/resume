@@ -80,30 +80,31 @@ All of the elements above are orchestrated and delivered through the core discip
 
 Let's dive into each component and see how they work together. No fluff, just practical implementation.
 
-⚠️ **Important**: The code examples below are simplified pseudo-code to illustrate concepts. They demonstrate the architecture and flow, not production-ready implementations. Always refer to official documentation for actual usage.
+⚠️ **Important**: The examples below show actual LLM responses with and without context engineering to demonstrate the dramatic improvement in output quality and relevance.
 
 ### 1. User Intent & Prompting — the starting point 🟡
 
 This is where everything begins. But modern prompting goes beyond simple text input:
 
-```python
-# Traditional approach - limited
-response = llm.generate("What's our Q4 revenue?")
+Original Prompt:
 
-# Context-engineered approach
-class ContextualPrompt:
-    def __init__(self, intent, user_info):
-        self.intent = intent
-        self.user_info = user_info
+```text
+System: You are an AI assistant with access to company data.
+User: What's our Q4 revenue?
+```
 
-    def enhance(self):
-        # Add temporal context
-        prompt = f"Current date: {datetime.now()}\n"
-        # Add user context
-        prompt += f"User role: {self.user_info.role}\n"
-        # Append actual user intent
-        prompt += f"\nUser question: {self.intent}"
-        return prompt
+Sample enhanced Prompt:
+
+```text
+System: You are an AI assistant with access to company data.
+Current date: 2025-08-05 14:30:00 EST
+User role: Data Analyst
+Department: Finance
+Current Quarter: Q3 2025
+
+User: What's our Q4 revenue?
+[Data Scope: North America]
+[Priority: High]
 ```
 
 Let's break this down:
@@ -121,46 +122,67 @@ The prompt evolves based on available context, not just static templates. This a
 
 ### 2. Agents & Reasoning — the decision makers 🔴
 
-Agents don't just respond — they reason, plan, and act. Here's a practical example using [LangGraph](https://langchain-ai.github.io/langgraph/concepts/why-langgraph/):
+Agents don't just respond — they reason, plan, and act.
 
-```python
-from langgraph.graph import Graph, Node
-from langchain.agents import Tool
+Given the User Query: _"What was our revenue growth rate last quarter compared to the same quarter last year, and how does it compare to industry average?"_, the sample agent reasoning workflow - actual execution trace:
 
-# Define agent decision flow
-class ContextAgent:
-    def __init__(self, tools):
-        self.tools = tools
+```text
+=== Step 1: ANALYZE ===
+Agent Analysis:
+"This query requires:
+1. Main intent: Mixed (database query + calculation + external search)
+2. Key entities: revenue, growth rate, last quarter (Q2 2025), 
+    same quarter last year (Q2 2024), industry average
+3. Required tools: execute_sql_query (for revenue data),
+    calculate_metric (for growth rate),
+    search_knowledge_base (for industry benchmarks)"
 
-    def decide_action(self, query):
-        # Analyze query intent
-        if "calculate" in query.lower():
-            return self.tools['calculator']
-        elif "search" in query.lower():
-            return self.tools['web_search']
-        elif "database" in query.lower():
-            return self.tools['sql_executor']
-        else:
-            return self.tools['rag_search']
+=== Step 2: PLAN ===
+Agent Plan:
+"1. Query database for Q2 2025 and Q2 2024 revenue
+2. Calculate growth rate percentage
+3. Search for industry average growth rates for our sector
+4. Compare our growth with industry average"
 
-    def execute(self, query):
-        tool = self.decide_action(query)
-        # Execute with reasoning loop
-        result = tool.run(query)
+=== Step 3: EXECUTE ===
+Tool: execute_sql_query
+Result: "Q2 2025: $142.7M, Q2 2024: $118.3M"
 
-        # Self-check: Is this answer complete?
-        if self.needs_more_context(result):
-            additional = self.tools['rag_search'].run(query)
-            result = self.combine_results(result, additional)
+Tool: calculate_metric
+Expression: ((142.7 - 118.3) / 118.3) * 100
+Result: "20.64%"
 
-        return result
+Tool: search_knowledge_base
+Result: "SaaS industry average growth Q2 2025: 15.2% YoY (source: Industry Report May 2025)"
+
+=== Step 4: SYNTHESIZE ===
+Agent Response:
+"Our revenue growth rate for Q2 2025 compared to Q2 2024 is 20.64%,
+which outperforms the industry average of 15.2% by 5.44 percentage points.
+
+Key findings:
+- Q2 2025 Revenue: $142.7M
+- Q2 2024 Revenue: $118.3M
+- Absolute Growth: $24.4M
+- Growth Rate: 20.64%
+- Industry Average: 15.2%
+- Outperformance: +5.44pp
+
+This strong performance indicates we're gaining market share in the SaaS sector."
+
+=== Step 5: REFLECT ===
+Agent Reflection:
+"Answer is complete: ✓ (addresses revenue, growth rate, and industry comparison)
+Answer is accurate: ✓ (calculations verified)
+Answer is clear: ✓ (structured with key metrics highlighted)
+Decision: END - no additional information needed"
 ```
 
 Here's what makes this agent intelligent:
 
 - **Intent Analysis**: The agent doesn't just pattern match — it understands what the user is trying to achieve
-- **Keyword-based Tool Selection**: Based on the query type, it automatically routes to the right tool (calculator for math, SQL for database queries)
-- **Self-Reflection**: The `needs_more_context` check ensures completeness — if the first answer isn't sufficient, it augments with additional searches
+- **Multi-step reasoning**: Analyze → Plan → Execute → Synthesize → Reflect workflow
+- **Self-Reflection**: The agent evaluates its own answers and can retry if needed
 
 Multiple tool outputs are intelligently merged, not just concatenated. This creates a reasoning loop that mimics how a human expert would approach the problem — assess, act, verify, and enhance if needed.
 
@@ -174,68 +196,46 @@ Nowadays, we have lots of reasoning LLM models like OpenAI's o3, Anthropic's Cla
 
 ### 3. RAG — the knowledge base 🔵
 
-When your LLM needs to know about YOUR data, RAG is the answer. Here's a pseudo example with Milvus:
+When your LLM needs to know about YOUR data, RAG is the answer. Here's how it transforms responses:
 
-```python
-from pymilvus import Collection, connections
-import openai
+Without RAG:
 
-class RAGPipeline:
-    def __init__(self, collection_name="company_docs"):
-        # Connect to Milvus
-        connections.connect(host='localhost', port='19530')
-        self.collection = Collection(collection_name)
+```text
+User: "What's our refund policy for enterprise customers who cancel mid-contract?"
+```
 
-    def search_context(self, query, top_k=5):
-        # Convert query to embedding
-        query_embedding = openai.Embedding.create(
-            input=query,
-            model="text-embedding-3-small"
-        )['data'][0]['embedding']
+With RAG:
 
-        # Search in vector database
-        search_params = {"metric_type": "IP", "params": {"nprobe": 10}}
-        results = self.collection.search(
-            data=[query_embedding],
-            anns_field="embedding",
-            param=search_params,
-            limit=top_k,
-            output_fields=["content", "metadata"]
-        )
+```text
+User: "What's our refund policy for enterprise customers who cancel mid-contract?"
 
-        # Format context for LLM
-        context = "\n---\n".join([
-            f"Source: {hit.entity.get('metadata')}\n{hit.entity.get('content')}"
-            for hit in results[0]
-        ])
+=== RAG Search Results ===
+Vector similarity search found 3 relevant documents:
 
-        return context
+Document 1 (similarity: 0.89):
+Source: Enterprise_Terms_2024.pdf
+"Enterprise customers canceling after 90 days receive prorated refunds based on unused service months. 
+Early termination fee: 25% of remaining contract value, waived for customers above $500K ARR."
 
-    def generate_answer(self, query, context):
-        prompt = f"""Based on the following context, answer the question.
+Document 2 (similarity: 0.82):
+Source: Support_FAQ_Internal.pdf  
+"Mid-contract cancellations: Finance approves refunds case-by-case. 
+Standard process: 60-day notice required, accounting calculates unused portion minus early termination fees."
 
-Context:
-{context}
-
-Question: {query}
-
-Answer:"""
-
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[{"role": "user", "content": prompt}]
-        )
-
-        return response.choices[0].message.content
+Document 3 (similarity: 0.78):
+Source: Legal_Policy_Updates_Q3_2024.pdf
+"Updated Oct 2024: Enterprise refund policy streamlined. 
+Customers can cancel anytime with 30-day notice. 
+Refund = (Remaining months / Total months) × Annual fee - Early termination fee."
 ```
 
 The magic happens in three steps:
 
 - **Embedding Generation**: Your query becomes a mathematical representation that captures semantic meaning
-- **Similarity Search**: The vector database finds documents with similar meaning, not just keyword matches
+- **Similarity Search**: The vector database finds documents with similar meaning, not just keyword matches  
 - **Context Formatting**: Retrieved chunks are structured to give the LLM maximum context without overwhelming it
 
-Unlike traditional search, RAG understands that "Q4 revenue" and "fourth quarter earnings" mean the same thing. It's semantic search meets intelligent retrieval.
+Unlike traditional keyword search, RAG understands that "refund policy" and "cancellation terms" mean the same thing. It's semantic search meets intelligent retrieval.
 
 Additionally, **Graph-based RAG** comes into the picture when **Relationships Matter**. Traditional RAG treats documents as isolated chunks. Graph RAG understands connections and perfectly support multi-hop reasoning questions, see [LightRAG](https://github.com/HKUDS/LightRAG) or [RAG Anything](https://github.com/HKUDS/RAG-Anything) for more details and sample codes. Besides, [LangChain Graph Transformers](https://python.langchain.com/docs/tutorials/graph/), [Microsoft GraphRAG](https://github.com/microsoft/graphrag) and [Neo4j GraphRAG](https://github.com/neo4j/neo4j-graphrag-python) are similar frameworks to implement the Knowledge Graph and Traversal Queries.
 
@@ -251,74 +251,75 @@ Additionally, **Graph-based RAG** comes into the picture when **Relationships Ma
 
 ### 4. Action Tools — getting things done 🔴
 
-LLMs can't just talk — they need to act. Here's how to give them superpowers using the Model Context Protocol (MCP):
+LLMs can't just talk — they need to act. Here's how MCP transforms responses:
 
-```python
-from mcp import MCPClient
+Without MCP (Action Tools):
 
-class FileSystemMCP:
-    def __init__(self):
-        self.client = MCPClient()
-        self.fs_server = None
-        
-    async def connect(self):
-        """Connect to filesystem MCP server with safety constraints"""
-        self.fs_server = await self.client.connect_to_server(
-            "mcp-filesystem",
-            allowed_directories=["/project", "/data"]  # Sandboxed access
-        )
-        
-    async def discover_tools(self):
-        """See what file operations are available"""
-        tools = await self.fs_server.list_tools()
-        for tool in tools:
-            print(f"Tool: {tool.name}")
-            print(f"  Description: {tool.description}")
-            print(f"  Parameters: {tool.input_schema}")
-        
-    async def use_filesystem(self, user_query):
-        """Example: LLM using filesystem tools based on user intent"""
-        if "read" in user_query:
-            # MCP validates path is within allowed directories
-            content = await self.fs_server.call_tool(
-                "read_file",
-                {"path": "/project/README.md"}
-            )
-            return content
-            
-        elif "analyze project structure" in user_query:
-            # Chain multiple tool calls
-            files = await self.fs_server.call_tool(
-                "list_directory", 
-                {"path": "/project", "recursive": True}
-            )
-            
-            # Read key files for context
-            important_files = ["README.md", "package.json", "requirements.txt"]
-            file_contents = {}
-            
-            for filename in important_files:
-                if filename in files:
-                    content = await self.fs_server.call_tool(
-                        "read_file",
-                        {"path": f"/project/{filename}"}
-                    )
-                    file_contents[filename] = content
-                    
-            return {
-                "structure": files,
-                "key_files": file_contents
-            }
+```text
+User: "Can you help me analyze my project structure and identify potential issues?"
 
-# Simple usage
-fs_mcp = FileSystemMCP()
-await fs_mcp.connect()
+LLM: "I'd be happy to help analyze your project structure, but I can't directly access your filesystem. 
+To analyze your project, you'll need to:
 
-# LLM can now safely read/write files within sandboxed directories
-result = await fs_mcp.use_filesystem("analyze project structure")
+1. Manually copy and paste your directory structure
+2. Share the contents of key files like README.md, package.json
+3. Describe any specific issues you're seeing
+
+Once you provide this information, I can help identify potential issues."
 ```
 
-What's happening here? The `FileSystemMCP` class demonstrates how MCP transforms your LLM from a text generator into an orchestration engine. This is just one example — MCP can connect to databases, APIs, cloud services, and more. Your LLM becomes an intelligent orchestrator that can interact with your entire tech stack.
+With MCP (Action Tools):
+
+```text
+User: "Can you help me analyze my project structure and identify potential issues?"
+
+=== MCP Tool Discovery ===
+Available tools:
+- read_file: Read contents of files
+- list_directory: List directory contents  
+- search_files: Search for patterns in files
+- run_linter: Execute project linting
+
+=== MCP Tool Execution Results ===
+✓ Project Structure Analysis:
+- Total files: 142 (47 Python, 23 TypeScript, 15 YAML)
+- Directory depth: Well-organized with max depth of 4
+- Naming conventions: Consistent snake_case for Python, camelCase for TS ✓
+
+⚠️ Issues Found:
+
+1. **Missing Documentation**:
+   - No README.md in /src/utils/
+   - API endpoints in /src/api/ lack docstrings
+
+2. **Configuration Issues**:
+   - package.json: 3 packages with security vulnerabilities
+   - .env.example missing required DATABASE_URL variable
+   - pytest.ini not found (tests may use default config)
+
+3. **Code Quality**:
+   - /src/models/user.py: Circular import detected with auth.py
+   - 12 files exceed 500 lines (consider refactoring)
+   - TODO comments found: 27 unresolved
+
+4. **Dependencies**:
+   - Conflicting versions: numpy 1.21 in requirements.txt vs 1.24 in setup.py
+   - 5 unused imports detected across the codebase
+
+📊 Quick Stats:
+- Test coverage: 67% (18 files missing tests)
+- Type coverage: 89% (good!)
+- Complexity hotspots: payment_processor.py (cyclomatic complexity: 15)
+```
+
+The difference is dramatic. With MCP, your LLM transforms from a passive text generator into an active assistant that can:
+
+- **Discover Available Actions**: The LLM knows what tools it can use in your environment
+- **Execute Safely**: All actions are sandboxed and permission-controlled
+- **Chain Operations**: Complex multi-step workflows happen automatically
+- **Provide Real Insights**: Instead of generic advice, you get specific, actionable findings
+
+MCP transforms your LLM from a text generator into an orchestration engine that can interact with your entire data stack.
 
 **Popular MCP servers and tools (ecosystem status August 2025):**
 - [MCP Protocol](https://www.anthropic.com/news/model-context-protocol) — Universal standard by Anthropic, OpenAI joined steering committee
@@ -329,44 +330,41 @@ What's happening here? The `FileSystemMCP` class demonstrates how MCP transforms
 
 Memory makes the difference between a chatbot and an intelligent assistant:
 
-```python
-class MemoryManager:
-    def __init__(self, redis_client, vector_store):
-        self.short_term = redis_client  # Fast, temporary
-        self.long_term = vector_store   # Persistent, searchable
+Without Memory Systems:
 
-    def store_interaction(self, session_id, message, response):
-        # Short-term: Current conversation
-        self.short_term.lpush(
-            f"session:{session_id}",
-            json.dumps({
-                "timestamp": datetime.now().isoformat(),
-                "message": message,
-                "response": response
-            })
-        )
-        self.short_term.expire(f"session:{session_id}", 3600)  # 1 hour
+```text
+Conversation 1 (Monday):
+User: "I prefer all visualizations in dark mode with our brand colors #1a73e8 and #ea4335"
 
-        # Long-term: Important patterns
-        if self.is_important(message, response):
-            embedding = self.create_embedding(f"{message} {response}")
-            self.long_term.add_documents(
-                texts=[f"Q: {message}\nA: {response}"],
-                embeddings=[embedding],
-                metadatas=[{"session": session_id, "type": "qa_pair"}]
-            )
+Conversation 2 (Wednesday):
+User: "Create a revenue dashboard"
+```
 
-    def recall_context(self, query, session_id):
-        # Get recent conversation
-        recent = self.short_term.lrange(f"session:{session_id}", 0, 5)
+With Memory Systems (Short-term + Long-term):
 
-        # Search similar past interactions
-        similar = self.long_term.similarity_search(query, k=3)
+```text
+Conversation 2 (Wednesday):
+User: "Create a revenue dashboard"
 
-        return {
-            "recent": [json.loads(r) for r in recent],
-            "similar": similar
-        }
+=== Memory Recall ===
+Short-term memory (last hour): Empty (new session)
+Long-term memory found:
+- User preference: Dark mode visualizations  
+- Brand colors: #1a73e8 (primary), #ea4335 (accent)
+- Previous dashboards: Always includes YoY comparison
+- Preferred metrics: Revenue, Growth %, Market Share
+```
+
+```text
+=== One Week Later ===
+User: "What's our typical revenue growth pattern?"
+
+=== Memory Recall ===
+Long-term memory patterns:
+- Revenue growth queries: 23 previous conversations
+- Typical patterns mentioned: Q4 spike, Q1 dip, steady Q2-Q3 growth
+- Target mentioned: 18% annual growth (referenced in 3 discussions)
+- User role: Finance team member (consistent analysis requests)
 ```
 
 This dual-memory approach mirrors human cognition:
@@ -380,85 +378,67 @@ The result? Your LLM remembers that the user prefers visualizations in dark mode
 
 **Popular solutions (production deployments August 2025):**
 - [Redis](https://redis.io/docs/latest/develop/get-started/) — Sub-millisecond latency for session storage, battle-tested at scale
-- [Milvus](https://milvus.io/docs)/[Pinecone](https://docs.pinecone.io/) — Leading vector stores for semantic long-term memory
+- [Milvus](https://milvus.io/docs) / [Pinecone](https://docs.pinecone.io/) — Leading vector stores for semantic long-term memory
 - [LangGraph Persistence](https://langchain-ai.github.io/langgraph/concepts/persistence/) — Next gen of the [LangChain Memory](https://python.langchain.com/docs/how_to/chatbots_memory/)
 
-## Putting It All Together — A Real Implementation
+## Putting It All Together — Complete Context Engineering in Action
 
-Here's how these components work in harmony with modern async patterns:
+Here's how all components work together in a real business scenario:
 
-```python
-import asyncio
-from typing import Dict, Any
+Without Context Engineering:
 
-class ContextEngineeredAssistant:
-    def __init__(self):
-        self.rag = RAGPipeline()
-        self.agent = ContextAgent()
-        self.memory = MemoryManager()
-        self.actions = ActionToolkit()
-        self.mcp_client = MCPClient()
-
-    async def process_query(self, user_input: str, session_id: str) -> Dict[str, Any]:
-        # 1. Parallel context gathering for speed
-        context_tasks = asyncio.gather(
-            self.memory.recall_context(user_input, session_id),
-            self.rag.search_context(user_input, top_k=3),
-            self.mcp_client.get_available_tools()
-        )
-        memory_context, rag_context, available_tools = await context_tasks
-
-        # 2. Build rich context
-        full_context = {
-            "user_input": user_input,
-            "conversation_history": memory_context["recent"],
-            "relevant_knowledge": rag_context,
-            "similar_past_queries": memory_context["similar"],
-            "available_actions": available_tools
-        }
-
-        # 3. Agent reasoning with context
-        plan = await self.agent.create_execution_plan(full_context)
-        
-        # 4. Execute plan steps
-        results = []
-        for step in plan.steps:
-            if step.type == "rag_search":
-                result = await self._execute_rag_search(step, full_context)
-            elif step.type == "mcp_action":
-                result = await self._execute_mcp_action(step)
-            elif step.type == "memory_update":
-                result = await self._update_memory(step, session_id)
-            
-            results.append(result)
-            # Update context with intermediate results
-            full_context[f"step_{step.id}_result"] = result
-
-        # 5. Generate final response
-        final_response = await self._synthesize_response(results, full_context)
-        
-        # 6. Async memory storage (non-blocking)
-        asyncio.create_task(
-            self.memory.store_interaction(session_id, user_input, final_response)
-        )
-
-        return {
-            "response": final_response,
-            "execution_plan": plan.to_dict(),
-            "context_used": self._summarize_context(full_context)
-        }
-
-    async def _execute_mcp_action(self, step):
-        """Execute MCP tools with proper error handling"""
-        try:
-            tool = await self.mcp_client.get_tool(step.tool_name)
-            result = await tool.execute(step.parameters)
-            return {"success": True, "data": result}
-        except Exception as e:
-            # Graceful degradation
-            fallback = await self._get_fallback_response(step)
-            return {"success": False, "error": str(e), "fallback": fallback}
+```text
+User: "Our biggest client is threatening to leave because of performance issues. 
+What's happening and how do we fix it?"
 ```
+
+With Complete Context Engineering:
+
+```text
+User: "Our biggest client is threatening to leave because of performance issues. 
+What's happening and how do we fix it?"
+
+🧠 CONTEXT GATHERING (Parallel - 0.3s):
+✓ Memory: BigTechCorp is client since 2019, $4.2M ARR, using Enterprise API tier
+✓ RAG: Found 47 related documents (incident reports, SLA docs, architecture diagrams)
+✓ MCP Tools: Monitoring access, log analysis, database queries available
+
+🎯 AGENT REASONING:
+"Critical situation requiring immediate diagnosis and action plan. Analyzing..."
+
+📊 ANALYSIS RESULTS:
+
+**Client: BigTechCorp (Customer ID: ENT-2019-001)**
+- Contract: Enterprise SLA (99.95% uptime guaranteed)
+- Current Status: 98.7% uptime last 7 days ⚠️ (SLA BREACH)
+- Revenue Impact: $11.5K/day at risk
+
+**Root Cause Identified:**
+1. Database connection pool exhaustion (started 7 days ago)
+2. Triggered by their new bulk import feature (10x normal load)
+3. Cascading timeouts affecting 3 API endpoints they heavily use
+
+**Performance Timeline:**
+- Day 1-2: 50ms → 200ms response time
+- Day 3-4: 200ms → 800ms (support ticket opened)
+- Day 5-7: 800ms → 3s with 15% timeout rate
+
+**Immediate Actions Taken:**
+✓ Increased connection pool from 100 → 500
+✓ Enabled query result caching for their top 10 queries
+✓ Allocated dedicated infrastructure for their workload
+
+**Current Status:**
+- Response time: 3s → 145ms ✓
+- Error rate: 15% → 0.1% ✓
+- Uptime recovering: 99.2% and climbing
+
+**Similar Past Incidents:**
+- TechGiant Inc (2023): Same issue, retained with dedicated infrastructure
+- DataCorp (2022): Lost due to slow response (worth $2.1M ARR)
+```
+
+This demonstrates how Context Engineering transforms crisis management from reactive questioning to proactive problem-solving through the orchestrated power of memory, knowledge retrieval, reasoning, and automated action.
 
 ## Ready to Engineer Some Context?
 
