@@ -225,5 +225,30 @@
     
     <!-- Cookie Consent -->
     {% include "partials/cookie_consent.html" %}
+    
+    <!-- Back to Top Button -->
+    <button 
+        id="back-to-top"
+        onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+        class="fixed bottom-6 right-6 bg-[var(--primary)] text-white w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 opacity-0 invisible"
+        aria-label="Back to top"
+    >
+        <i class="fas fa-chevron-up"></i>
+    </button>
+    
+    <script>
+        // Show/hide back to top button based on scroll position
+        const backToTopButton = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.remove('opacity-100', 'visible');
+                backToTopButton.classList.add('opacity-0', 'invisible');
+            }
+        });
+    </script>
 </body>
 </html>

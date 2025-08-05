@@ -1,0 +1,525 @@
+function initDiagram() {
+    // Create mock Neo4j data structure for CONTEXT Engineering
+    const config = {
+        containerId: "context-engineering-diagram",
+        visConfig: {
+            nodes: {
+                Person: {
+                    color: "#312b2bff",
+                    borderColor: "#ffffff",
+                    borderWidth: 3,
+                    size: 40,
+                    font: {
+                        color: "#ffffff",
+                        size: 14,
+                        face: "Inter"
+                    }
+                },
+                Data: {
+                    color: "#F59E0B",
+                    borderColor: "#ffffff", 
+                    borderWidth: 3,
+                    size: 35,
+                    font: {
+                        color: "#ffffff",
+                        size: 14,
+                        face: "Inter"
+                    }
+                },
+                CONTEXT: {
+                    color: "#10B981",
+                    borderColor: "#ffffff",
+                    borderWidth: 3,
+                    size: 45,
+                    font: {
+                        color: "#ffffff",
+                        size: 14,
+                        face: "Inter"
+                    }
+                },
+                Augmentation: {
+                    color: "#1d27efcf",
+                    borderColor: "#ffffff",
+                    borderWidth: 3,
+                    size: 40,
+                    font: {
+                        color: "#ffffff",
+                        size: 14,
+                        face: "Inter"
+                    }
+                },
+                Function: {
+                    color: "#EF4444",
+                    borderColor: "#ffffff",
+                    borderWidth: 3,
+                    size: 40,
+                    font: {
+                        color: "#ffffff",
+                        size: 14,
+                        face: "Inter"
+                    }
+                },
+                Storage: {
+                    color: "#8B5CF6",
+                    borderColor: "#ffffff",
+                    borderWidth: 3,
+                    size: 45,
+                    font: {
+                        color: "#ffffff",
+                        size: 14,
+                        face: "Inter"
+                    }
+                }
+            },
+            edges: {
+                PROVIDES: {
+                    color: "#cccccc",
+                    width: 2,
+                    arrows: "to",
+                    font: {
+                        color: "#aaaaaa",
+                        size: 11,
+                        face: "Inter",
+                        background: "#1a1a1a",
+                        strokeColor: "#444444",
+                        strokeWidth: 1
+                    }
+                },
+                FEEDS_INTO: {
+                    color: "#cccccc",
+                    width: 2,
+                    arrows: "to",
+                    font: {
+                        color: "#aaaaaa",
+                        size: 11,
+                        face: "Inter",
+                        background: "#1a1a1a",
+                        strokeColor: "#444444",
+                        strokeWidth: 1
+                    }
+                },
+                ACTIVATES: {
+                    color: "#cccccc",
+                    width: 2,
+                    arrows: "to",
+                    font: {
+                        color: "#aaaaaa",
+                        size: 11,
+                        face: "Inter",
+                        background: "#1a1a1a",
+                        strokeColor: "#444444",
+                        strokeWidth: 1
+                    }
+                },
+                QUERIES: {
+                    color: "#cccccc",
+                    width: 2,
+                    arrows: "to",
+                    font: {
+                        color: "#aaaaaa",
+                        size: 11,
+                        face: "Inter",
+                        background: "#1a1a1a",
+                        strokeColor: "#444444",
+                        strokeWidth: 1
+                    }
+                },
+                EXECUTES: {
+                    color: "#cccccc",
+                    width: 2,
+                    arrows: "to",
+                    font: {
+                        color: "#aaaaaa",
+                        size: 11,
+                        face: "Inter",
+                        background: "#1a1a1a",
+                        strokeColor: "#444444",
+                        strokeWidth: 1
+                    }
+                },
+                GENERATES: {
+                    color: "#cccccc",
+                    width: 2,
+                    arrows: "to",
+                    font: {
+                        color: "#aaaaaa",
+                        size: 11,
+                        face: "Inter",
+                        background: "#1a1a1a",
+                        strokeColor: "#444444",
+                        strokeWidth: 1
+                    }
+                },
+                RESPONDS_TO: {
+                    color: "#cccccc",
+                    width: 2,
+                    arrows: "to",
+                    font: {
+                        color: "#aaaaaa",
+                        size: 11,
+                        face: "Inter",
+                        background: "#1a1a1a",
+                        strokeColor: "#444444",
+                        strokeWidth: 1
+                    }
+                },
+                ACCESSES: {
+                    color: "#666666",
+                    width: 1,
+                    arrows: "to",
+                    dashes: [5, 5],
+                    font: {
+                        color: "#aaaaaa",
+                        size: 11,
+                        face: "Inter",
+                        background: "#1a1a1a",
+                        strokeColor: "#444444",
+                        strokeWidth: 1
+                    }
+                },
+                STORES_IN: {
+                    color: "#cccccc",
+                    width: 2,
+                    arrows: "to",
+                    font: {
+                        color: "#aaaaaa",
+                        size: 11,
+                        face: "Inter",
+                        background: "#1a1a1a",
+                        strokeColor: "#444444",
+                        strokeWidth: 1
+                    }
+                },
+                RETRIEVES_FROM: {
+                    color: "#666666",
+                    width: 1,
+                    arrows: "to",
+                    dashes: [5, 5],
+                    font: {
+                        color: "#aaaaaa",
+                        size: 11,
+                        face: "Inter",
+                        background: "#1a1a1a",
+                        strokeColor: "#444444",
+                        strokeWidth: 1
+                    }
+                },
+                UPDATES: {
+                    color: "#666666",
+                    width: 1,
+                    arrows: "to",
+                    dashes: [5, 5],
+                    font: {
+                        color: "#aaaaaa",
+                        size: 11,
+                        face: "Inter",
+                        background: "#1a1a1a",
+                        strokeColor: "#444444",
+                        strokeWidth: 1
+                    }
+                }
+            },
+            layout: {
+                hierarchical: {
+                    enabled: false
+                }
+            },
+            interaction: {
+                hover: true,
+                tooltipDelay: 300,
+                zoomView: true,
+                dragView: true,
+                dragNodes: true
+            },
+            physics: {
+                enabled: true,
+                stabilization: {
+                    enabled: true,
+                    iterations: 100
+                },
+                barnesHut: {
+                    gravitationalConstant: -8000,
+                    centralGravity: 0.3,
+                    springLength: 120,
+                    springConstant: 0.04,
+                    damping: 0.09
+                }
+            }
+        },
+        initialCypher: "" // We'll use static data instead
+    };
+
+    // Create static graph data in Neo4j format with optimized positioning
+    const graphData = {
+        nodes: [
+            {
+                id: 1,
+                label: "User 💁",
+                group: "Person",
+                title: "The person interacting with the system",
+                x: 80, y: 300
+            },
+            {
+                id: 2,
+                label: "Intent",
+                group: "Data", 
+                title: "User input (questions, commands, queries)",
+                x: 250, y: 300
+            },
+            {
+                id: 3,
+                label: "Prompt",
+                group: "CONTEXT",
+                title: "Aggregates input, memory, and schemas for the agent",
+                x: 420, y: 300
+            },
+            {
+                id: 4,
+                label: "Agent",
+                group: "Function",
+                title: "Reasoning engine for decision making and orchestration",
+                x: 590, y: 300
+            },
+            {
+                id: 5,
+                label: "R-A-G",
+                group: "Augmentation",
+                title: "Retrieval-Augmented Generation with vector search and/or knowlegde graph traversal",
+                x: 760, y: 180
+            },
+            {
+                id: 6,
+                label: "Action Tools",
+                group: "Function",
+                title: "APIs, SQL, code execution, external connectors",
+                x: 590, y: 450
+            },
+            {
+                id: 7,
+                label: "Answer",
+                group: "Data",
+                title: "Final response delivered to the user",
+                x: 420, y: 120
+            },
+            {
+                id: 8,
+                label: "Long-Term Mem",
+                group: "Storage",
+                title: "Persistent memory: MCP Servers + Databases",
+                x: 850, y: 80
+            },
+            {
+                id: 9,
+                label: "Short-Term Mem",
+                group: "Storage",
+                title: "Session memory: stores recent chat history",
+                x: 420, y: 480
+            }
+        ],
+        edges: [
+            {
+                from: 1, to: 2, label: "PROVIDES", title: "Step 1",
+                color: { color: "#cccccc" }, width: 2
+            },
+            {
+                from: 2, to: 3, label: "FEEDS_INTO", title: "Step 2",
+                color: { color: "#cccccc" }, width: 2
+            },
+            {
+                from: 3, to: 4, label: "ACTIVATES", title: "Step 3", 
+                color: { color: "#cccccc" }, width: 2
+            },
+            {
+                from: 4, to: 5, label: "QUERIES", title: "Step 4: vector search",
+                color: { color: "#cccccc" }, width: 2
+            },
+            {
+                from: 4, to: 6, label: "EXECUTES", title: "Step 5",
+                color: { color: "#cccccc" }, width: 2
+            },
+            {
+                from: 4, to: 7, label: "GENERATES", title: "Step 6",
+                color: { color: "#cccccc" }, width: 2
+            },
+            {
+                from: 7, to: 1, label: "RESPONDS_TO", title: "Step 7: response",
+                color: { color: "#cccccc" }, width: 2
+            },
+            {
+                from: 3, to: 9, label: "ACCESSES", title: "Step 8: context",
+                color: { color: "#666666" }, width: 1, dashes: [5, 5]
+            },
+            {
+                from: 7, to: 8, label: "STORES_IN", title: "Step 9: store",
+                color: { color: "#cccccc" }, width: 2
+            },
+            {
+                from: 5, to: 8, label: "RETRIEVES_FROM", title: "retrieve",
+                color: { color: "#666666" }, width: 1, dashes: [5, 5]
+            },
+            {
+                from: 4, to: 3, label: "UPDATES", title: "update",
+                color: { color: "#666666" }, width: 1, dashes: [5, 5]
+            }
+        ]
+    };
+    
+    // Use vis.js (Neo4j visualization library) to render the network
+    renderNetwork();
+
+    function renderNetwork() {
+        const container = document.getElementById('context-engineering-diagram');
+        
+        // Make container relatively positioned to contain absolute positioned elements
+        container.style.position = 'relative';
+        
+        const options = {
+            nodes: {
+                shape: 'circle',
+                size: 40,
+                font: {
+                    size: 14,
+                    color: '#ffffff',
+                    face: 'Inter'
+                },
+                borderWidth: 3,
+                borderColor: '#ffffff',
+                chosen: {
+                    node: function(values, id, selected, hovering) {
+                        values.size = 50;
+                        values.borderWidth = 4;
+                    }
+                }
+            },
+            edges: {
+                arrows: {
+                    to: { enabled: true, scaleFactor: 1 }
+                },
+                font: {
+                    size: 11,
+                    color: '#aaaaaa',
+                    face: 'Inter',
+                    background: '#1a1a1a',
+                    strokeColor: '#444444',
+                    strokeWidth: 1
+                },
+                smooth: {
+                    type: 'continuous',
+                    roundness: 0.5
+                }
+            },
+            layout: {
+                improvedLayout: false
+            },
+            physics: {
+                enabled: true,
+            },
+            interaction: {
+                hover: true,
+                tooltipDelay: 300,
+                zoomView: false,
+                dragView: true,
+                dragNodes: true
+            }
+        };
+
+        // Apply node colors based on group
+        const coloredNodes = graphData.nodes.map(node => ({
+            ...node,
+            color: config.visConfig.nodes[node.group].color,
+            borderColor: config.visConfig.nodes[node.group].borderColor,
+            borderWidth: config.visConfig.nodes[node.group].borderWidth,
+            size: config.visConfig.nodes[node.group].size
+        }));
+
+        const network = new vis.Network(container, {
+            nodes: new vis.DataSet(coloredNodes),
+            edges: new vis.DataSet(graphData.edges)
+        }, options);
+
+        // Add legend
+        addLegend();
+        
+        // Add refresh button
+        addRefreshButton(network);
+    }
+
+    function addLegend() {
+        const legendContainer = document.createElement('div');
+        legendContainer.style.cssText = `
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            border: 1px solid #555;
+            border-radius: 8px;
+            padding: 15px;
+            color: white;
+            font-size: 12px;
+            z-index: 1000;
+        `;
+
+        const legend = [
+            { color: '#312b2bff', label: 'Person' },
+            { color: '#F59E0B', label: 'Data' },
+            { color: '#10B981', label: 'CONTEXT' },
+            { color: '#1d27efcf', label: 'Augmentation' },
+            { color: '#EF4444', label: 'Function' },
+            { color: '#8B5CF6', label: 'Storage' }
+        ];
+
+        let legendHTML = '';
+        legend.forEach(item => {
+            legendHTML += `
+                <div style="display: flex; align-items: center; margin: 5px 0;">
+                    <div style="width: 16px; height: 16px; border-radius: 50%; background: ${item.color}; margin-right: 8px; border: 2px solid white;"></div>
+                    <span>${item.label}</span>
+                </div>
+            `;
+        });
+
+        legendContainer.innerHTML = legendHTML;
+        document.getElementById('context-engineering-diagram').appendChild(legendContainer);
+    }
+
+    function addRefreshButton(network) {
+        const refreshButton = document.createElement('button');
+        refreshButton.style.cssText = `
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            border: 1px solid #555;
+            border-radius: 50%;
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        `;
+        
+        refreshButton.innerHTML = '<i class="fas fa-sync-alt"></i>';
+        
+        refreshButton.addEventListener('click', () => {
+            refreshButton.innerHTML = '<i class="fas fa-check"></i>';
+            initDiagram();
+        });
+        
+        refreshButton.addEventListener('mouseenter', () => {
+            refreshButton.style.transform = 'scale(1.05)';
+        });
+        
+        refreshButton.addEventListener('mouseleave', () => {
+            refreshButton.style.transform = 'scale(1)';
+        });
+        
+        document.getElementById('context-engineering-diagram').appendChild(refreshButton);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    initDiagram();
+});

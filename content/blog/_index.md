@@ -13,6 +13,15 @@ template = "blog.html"
 # read_time = "X min read"
 
 [[extra.blog_posts]]
+title = "Context Engineering: How RAG, agents, and memory make LLMs actually useful"
+description = "When your LLM needs more than just a good prompt? Context Engineering is the answer. Let's explore how RAG, agents, memory systems, and action tools work together to create truly intelligent applications."
+url = "/blog/internal/context-engineering-modern-llm-ecosystem/"
+date = "2025-08-05"
+platform = "Personal | Dat Nguyen"
+tags = ["LLM", "ContextEngineering", "RAG", "Agents", "LangChain", "VectorDB"]
+read_time = "9 min read"
+
+[[extra.blog_posts]]
 title = "Let's Compare CrewAI, AutoGen, Vertex AI, and LangGraph Multi-Agent Frameworks"
 url = "https://infinitelambda.com/compare-crewai-autogen-vertexai-langgraph/"
 date = "2025-07-11"
