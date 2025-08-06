@@ -87,6 +87,14 @@
   opacity: 0.9;
 }
 
+.article-content ul {
+  list-style-type: disc;
+}
+
+.article-content ol {
+  list-style-type: decimal;
+}
+
 .article-content li {
   margin-bottom: 0.5rem;
 }

@@ -436,17 +436,15 @@ User: "Our biggest client is threatening to leave because of performance issues.
 - DataCorp (2022): Lost due to slow response (worth $2.1M ARR)
 ```
 
-(1) Memory Systems (🟣) - Shows long-term memory recalling client history: "BigTechCorp is client since 2019, $4.2M ARR" and past incident patterns
+Let's break down:
 
-(2) RAG (🔵) - Retrieves 47 relevant documents including incident reports, SLA docs, and architecture diagrams
-
-(3) Action Tools/MCP (🔴) - Provides monitoring access, log analysis, and database query capabilities that enable the
+1. Memory Systems (🟣) - Shows long-term memory recalling client history: "BigTechCorp is client since 2019, $4.2M ARR" and past incident patterns
+2. RAG (🔵) - Retrieves 47 relevant documents including incident reports, SLA docs, and architecture diagrams
+3. Action Tools/MCP (🔴) - Provides monitoring access, log analysis, and database query capabilities that enable the
 actual investigation
-
-(4) Agents & Reasoning (🔴) - Demonstrates multi-step analysis: identifies critical situation → diagnoses root cause →
+4. Agents & Reasoning (🔴) - Demonstrates multi-step analysis: identifies critical situation → diagnoses root cause →
 takes corrective actions → monitors results
-
-(5) User Intent & Prompting (🟡) - While implicit, the system correctly interprets the urgent request and enriches it with
+5. User Intent & Prompting (🟡) - While implicit, the system correctly interprets the urgent request and enriches it with
 temporal context and client-specific information
 
 LLM responses work precisely based on the context we provide, without it, they hallucinate with creative but unreliable answers. You can already imagine the quality difference between the two responses above: one simple, one enriched with comprehensive context.
