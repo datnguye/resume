@@ -8,7 +8,6 @@ function initDiagram() {
                     color: "#312b2bff",
                     borderColor: "#ffffff",
                     borderWidth: 3,
-                    size: 40,
                     font: {
                         color: "#ffffff",
                         size: 14,
@@ -19,7 +18,6 @@ function initDiagram() {
                     color: "#F59E0B",
                     borderColor: "#ffffff", 
                     borderWidth: 3,
-                    size: 35,
                     font: {
                         color: "#ffffff",
                         size: 14,
@@ -30,7 +28,6 @@ function initDiagram() {
                     color: "#10B981",
                     borderColor: "#ffffff",
                     borderWidth: 3,
-                    size: 45,
                     font: {
                         color: "#ffffff",
                         size: 14,
@@ -38,10 +35,9 @@ function initDiagram() {
                     }
                 },
                 Augmentation: {
-                    color: "#1d27efcf",
+                    color: "#1d27ef",
                     borderColor: "#ffffff",
                     borderWidth: 3,
-                    size: 40,
                     font: {
                         color: "#ffffff",
                         size: 14,
@@ -52,7 +48,6 @@ function initDiagram() {
                     color: "#EF4444",
                     borderColor: "#ffffff",
                     borderWidth: 3,
-                    size: 40,
                     font: {
                         color: "#ffffff",
                         size: 14,
@@ -63,7 +58,6 @@ function initDiagram() {
                     color: "#8B5CF6",
                     borderColor: "#ffffff",
                     borderWidth: 3,
-                    size: 45,
                     font: {
                         color: "#ffffff",
                         size: 14,
@@ -254,66 +248,66 @@ function initDiagram() {
         nodes: [
             {
                 id: 1,
-                label: "User 💁",
+                label: " \uf007 User ",
                 group: "Person",
                 title: "The person interacting with the system",
-                x: 80, y: 300
+                x: -200, y: 300
             },
             {
                 id: 2,
-                label: "Intent",
+                label: ' \uf075 Intent ',
                 group: "Data", 
                 title: "User input (questions, commands, queries)",
-                x: 250, y: 300
+                x: -50, y: 300,
             },
             {
                 id: 3,
-                label: "Prompt",
+                label: ' \uf0e8 Prompt ',
                 group: "CONTEXT",
                 title: "Aggregates input, memory, and schemas for the agent",
-                x: 420, y: 300
+                x: 150, y: 300,
             },
             {
                 id: 4,
-                label: "Agent",
+                label: ' \uf544 Agent ',
                 group: "Function",
                 title: "Reasoning engine for decision making and orchestration",
-                x: 590, y: 300
+                x: 400, y: 300,
             },
             {
                 id: 5,
-                label: "R-A-G",
+                label: ' \uf002 R-A-G ',
                 group: "Augmentation",
                 title: "Retrieval-Augmented Generation with vector search and/or knowlegde graph traversal",
-                x: 760, y: 180
+                x: 650, y: 200,
             },
             {
                 id: 6,
-                label: "Action Tools",
+                label: ' \uf0ad Action Tools ',
                 group: "Function",
                 title: "APIs, SQL, code execution, external connectors",
-                x: 590, y: 450
+                x: 650, y: 400,
             },
             {
                 id: 7,
-                label: "Answer",
+                label: '  \uf4ad Answer  ',
                 group: "Data",
                 title: "Final response delivered to the user",
-                x: 420, y: 120
+                x: -50, y: 100,
             },
             {
                 id: 8,
-                label: "Long-Term Mem",
+                label: ' \uf1c0 Long-Term\nMemory ',
                 group: "Storage",
                 title: "Persistent memory: MCP Servers + Databases",
-                x: 850, y: 80
+                x: 400, y: 50,
             },
             {
                 id: 9,
-                label: "Short-Term Mem",
+                label: ' \uf017 Short-Term\nMemory ',
                 group: "Storage",
                 title: "Session memory: stores recent chat history",
-                x: 420, y: 480
+                x: 150, y: 500,
             }
         ],
         edges: [
@@ -327,7 +321,7 @@ function initDiagram() {
             },
             {
                 from: 3, to: 4, label: "ACTIVATES", title: "", 
-                color: { color: "#cccccc" }, width: 2
+                color: { color: "#cccccc" }, width: 2, length: 250
             },
             {
                 from: 4, to: 5, label: "QUERIES", title: "",
@@ -351,7 +345,7 @@ function initDiagram() {
             },
             {
                 from: 7, to: 8, label: "STORES IN", title: "",
-                color: { color: "#cccccc" }, width: 2
+                color: { color: "#cccccc" }, width: 2, length: 250
             },
             {
                 from: 5, to: 8, label: "RETRIEVES FROM", title: "",
@@ -359,7 +353,7 @@ function initDiagram() {
             },
             {
                 from: 4, to: 3, label: "UPDATES", title: "",
-                color: { color: "#666666" }, width: 1, dashes: [5, 5]
+                color: { color: "#666666" }, width: 1, dashes: [5, 5], length: 250
             }
         ]
     };
@@ -376,17 +370,18 @@ function initDiagram() {
         const options = {
             nodes: {
                 shape: 'circle',
-                size: 40,
                 font: {
-                    size: 14,
+                    size: 35,
                     color: '#ffffff',
-                    face: 'Inter'
+                    face: 'FontAwesome, Inter',
+                    align: 'center',
+                    multi: true,
+                    vadjust: 0
                 },
                 borderWidth: 3,
-                borderColor: '#ffffff',
+                borderColor: '#201818ff',
                 chosen: {
                     node: function(values, id, selected, hovering) {
-                        values.size = 50;
                         values.borderWidth = 4;
                     }
                 }
@@ -396,7 +391,7 @@ function initDiagram() {
                     to: { enabled: true, scaleFactor: 0.5 }
                 },
                 font: {
-                    size: 11,
+                    size: 30,
                     color: '#aaaaaa',
                     face: 'Inter',
                     background: '#1a1a1a',
@@ -404,8 +399,9 @@ function initDiagram() {
                     strokeWidth: 1
                 },
                 smooth: {
-                    type: 'continuous',
-                    roundness: 0.5
+                    type: 'dynamic',
+                    roundness: 0.5,
+                    forceDirection: 'none'
                 }
             },
             layout: {
@@ -413,6 +409,19 @@ function initDiagram() {
             },
             physics: {
                 enabled: true,
+                stabilization: {
+                    enabled: true,
+                    iterations: 200,
+                    updateInterval: 25
+                },
+                barnesHut: {
+                    gravitationalConstant: -15000,
+                    centralGravity: 0.1,
+                    springLength: 250,
+                    springConstant: 0.03,
+                    damping: 0.95,
+                    avoidOverlap: 1
+                }
             },
             interaction: {
                 hover: true,
@@ -423,19 +432,21 @@ function initDiagram() {
             }
         };
 
-        // Apply node colors based on group
+        // Apply node colors based on group - simplified approach
         const coloredNodes = graphData.nodes.map(node => ({
-            ...node,
+            id: node.id,
+            label: node.label,
+            title: node.title,
+            x: node.x,
+            y: node.y,
             color: config.visConfig.nodes[node.group].color,
-            borderColor: config.visConfig.nodes[node.group].borderColor,
-            borderWidth: config.visConfig.nodes[node.group].borderWidth,
-            size: config.visConfig.nodes[node.group].size
         }));
 
         const network = new vis.Network(container, {
             nodes: new vis.DataSet(coloredNodes),
             edges: new vis.DataSet(graphData.edges)
         }, options);
+        
 
         // Add legend
         addLegend();
