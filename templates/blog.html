@@ -45,7 +45,7 @@
                         
                         <!-- Title -->
                         <h2 class="text-xl font-bold mb-3 hover:text-[var(--primary)] transition-colors">
-                            <a href="{{ post.permalink }}" rel="noopener noreferrer">
+                            <a href="{{ post.permalink }}">
                                 {{ post.title }}
                             </a>
                         </h2>
@@ -68,7 +68,7 @@
                     <!-- Footer with read time and link -->
                     <div class="px-6 py-4 bg-[var(--background)] bg-opacity-50 flex justify-between items-center">
                         <span class="text-xs opacity-60">🕥 {{ post.reading_time }} min read</span>
-                        <a href="{{ post.permalink }}" rel="noopener noreferrer" 
+                        <a href="{{ post.permalink }}"
                            class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-1">
                             Read Article
                             <i class="fas fa-arrow-right text-xs"></i>
@@ -88,7 +88,8 @@
                         
                         <!-- Title -->
                         <h2 class="text-xl font-bold mb-3 hover:text-[var(--primary)] transition-colors">
-                            <a href="{{ post.url }}{% if '?' in post.url %}&{% else %}?{% endif %}utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio" target="_blank" rel="noopener noreferrer">
+                            <a href="{{ post.url }}{% if '/blog/internal/' not in post.url %}{% if '?' in post.url %}&{% else %}?{% endif %}utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio{% endif %}"
+                               {% if '/blog/internal/' not in post.url %}target="_blank" rel="noopener"{% endif %}>
                                 {{ post.title }}
                             </a>
                         </h2>
@@ -109,10 +110,11 @@
                     <!-- Footer with read time and link -->
                     <div class="px-6 py-4 bg-[var(--background)] bg-opacity-50 flex justify-between items-center">
                         <span class="text-xs opacity-60">🕥 {{ post.read_time }}</span>
-                        <a href="{{ post.url }}{% if '?' in post.url %}&{% else %}?{% endif %}utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio" target="_blank" rel="noopener noreferrer" 
+                        <a href="{{ post.url }}{% if '/blog/internal/' not in post.url %}{% if '?' in post.url %}&{% else %}?{% endif %}utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio{% endif %}"
+                           {% if '/blog/internal/' not in post.url %}target="_blank" rel="noopener"{% endif %}
                            class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-1">
                             Read Article
-                            <i class="fas fa-external-link-alt text-xs"></i>
+                            <i class="fas fa-{% if '/blog/internal/' in post.url %}arrow-right{% else %}external-link-alt{% endif %} text-xs"></i>
                         </a>
                     </div>
                 </article>
