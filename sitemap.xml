@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://about.datnguyen.de/</loc>
+    </url>
+    <url>
+        <loc>https://about.datnguyen.de/blog/</loc>
+    </url>
+    <url>
+        <loc>https://about.datnguyen.de/blog/internal/blog-post-template/</loc>
+        <lastmod>2025-07-29</lastmod>
+    </url>
+    <url>
+        <loc>https://about.datnguyen.de/blog/internal/context-engineering-modern-llm-ecosystem/</loc>
+        <lastmod>2025-08-05</lastmod>
+    </url>
+</urlset>
