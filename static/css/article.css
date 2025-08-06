@@ -99,6 +99,54 @@
   margin-bottom: 0.5rem;
 }
 
+/* Header anchor copy buttons */
+.header-anchor-copy {
+  position: absolute;
+  left: -1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--text);
+  opacity: 0;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.header-anchor-copy:hover {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Show anchor copy button on header hover */
+.article-content h2:hover .header-anchor-copy,
+.article-content h3:hover .header-anchor-copy,
+.article-content h4:hover .header-anchor-copy,
+.article-content h5:hover .header-anchor-copy,
+.article-content h6:hover .header-anchor-copy {
+  opacity: 0.6;
+}
+
+.article-content h2:hover .header-anchor-copy:hover,
+.article-content h3:hover .header-anchor-copy:hover,
+.article-content h4:hover .header-anchor-copy:hover,
+.article-content h5:hover .header-anchor-copy:hover,
+.article-content h6:hover .header-anchor-copy:hover {
+  opacity: 1;
+}
+
+/* Responsive: hide anchor buttons on mobile */
+@media (max-width: 768px) {
+  .header-anchor-copy {
+    display: none;
+  }
+}
+
 /* Horizontal rules */
 .article-content hr {
   border: none;
