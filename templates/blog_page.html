@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/article.css">
+    <link rel="stylesheet" href="/css/comments.css">
     
     <!-- Only load syntax highlighting if needed -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
@@ -215,11 +216,29 @@
             {% endif %}
         </nav>
 
+        <!-- Comments Section -->
+        <div class="comments-container">
+            <div class="comments-header">
+                <h2><i class="fas fa-comments"></i> Comments</h2>
+                <p>Join the discussion! Your thoughts and feedback are valuable.</p>
+            </div>
+            <div class="comments-info">
+                <p>💡 Comments are powered by GitHub Discussions. You'll need a GitHub account to comment. Make sure Discussions are enabled in the repository.</p>
+            </div>
+            <div id="comments-section">
+                <div class="comments-loading">
+                    <i class="fas fa-spinner"></i>
+                    Loading comments...
+                </div>
+            </div>
+        </div>
+
         {% include "partials/footer.html" %}
     </div>
 
     <script src="/js/search.js"></script>
     <script src="/js/script.js"></script>
+    <script src="/js/comments.js"></script>
     
     <!-- Article Ads Script -->
     {% if page.extra.show_ads is not defined or page.extra.show_ads %}
