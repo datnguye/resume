@@ -35,8 +35,6 @@ The graph below illustrates the essential components and the relationships betwe
     <p><strong>Diagram Description:</strong> This interactive diagram illustrates how Context Engineering components work together. At the center is the Context node, which connects to five key components: (1) User Intent & Prompting provides the initial query, (2) Agents & Reasoning orchestrates the decision-making process, (3) RAG retrieves relevant knowledge from your data, (4) Action Tools enable external interactions, and (5) Memory Systems maintain conversation state and user preferences. All components feed back into the central Context, creating a feedback loop that enriches the LLM's understanding.</p>
   </noscript>
 </div>
-<script src="https://unpkg.com/neo4j-driver@5.15.0/lib/browser/neo4j-web.min.js"></script>
-<script src="https://unpkg.com/neovis.js@2.1.0/dist/neovis.min.js"></script>
 <script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
 <script src="/blog/context-engineering-modern-llm-ecosystem/diagram.js"></script>
 <script src="/blog/context-engineering-modern-llm-ecosystem/stacked-bar-chart.js"></script>

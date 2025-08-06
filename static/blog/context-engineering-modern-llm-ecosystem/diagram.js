@@ -318,47 +318,47 @@ function initDiagram() {
         ],
         edges: [
             {
-                from: 1, to: 2, label: "PROVIDES", title: "Step 1",
+                from: 1, to: 2, label: "PROVIDES", title: "",
                 color: { color: "#cccccc" }, width: 2
             },
             {
-                from: 2, to: 3, label: "FEEDS_INTO", title: "Step 2",
+                from: 2, to: 3, label: "FEEDS INTO", title: "",
                 color: { color: "#cccccc" }, width: 2
             },
             {
-                from: 3, to: 4, label: "ACTIVATES", title: "Step 3", 
+                from: 3, to: 4, label: "ACTIVATES", title: "", 
                 color: { color: "#cccccc" }, width: 2
             },
             {
-                from: 4, to: 5, label: "QUERIES", title: "Step 4: vector search",
+                from: 4, to: 5, label: "QUERIES", title: "",
                 color: { color: "#cccccc" }, width: 2
             },
             {
-                from: 4, to: 6, label: "EXECUTES", title: "Step 5",
+                from: 4, to: 6, label: "EXECUTES", title: "",
                 color: { color: "#cccccc" }, width: 2
             },
             {
-                from: 4, to: 7, label: "GENERATES", title: "Step 6",
+                from: 4, to: 7, label: "GENERATES", title: "",
                 color: { color: "#cccccc" }, width: 2
             },
             {
-                from: 7, to: 1, label: "RESPONDS_TO", title: "Step 7: response",
+                from: 7, to: 1, label: "RESPONDS TO", title: "",
                 color: { color: "#cccccc" }, width: 2
             },
             {
-                from: 3, to: 9, label: "ACCESSES", title: "Step 8: context",
+                from: 3, to: 9, label: "ACCESSES", title: "",
                 color: { color: "#666666" }, width: 1, dashes: [5, 5]
             },
             {
-                from: 7, to: 8, label: "STORES_IN", title: "Step 9: store",
+                from: 7, to: 8, label: "STORES IN", title: "",
                 color: { color: "#cccccc" }, width: 2
             },
             {
-                from: 5, to: 8, label: "RETRIEVES_FROM", title: "retrieve",
+                from: 5, to: 8, label: "RETRIEVES FROM", title: "",
                 color: { color: "#666666" }, width: 1, dashes: [5, 5]
             },
             {
-                from: 4, to: 3, label: "UPDATES", title: "update",
+                from: 4, to: 3, label: "UPDATES", title: "",
                 color: { color: "#666666" }, width: 1, dashes: [5, 5]
             }
         ]
@@ -393,7 +393,7 @@ function initDiagram() {
             },
             edges: {
                 arrows: {
-                    to: { enabled: true, scaleFactor: 1 }
+                    to: { enabled: true, scaleFactor: 0.5 }
                 },
                 font: {
                     size: 11,
